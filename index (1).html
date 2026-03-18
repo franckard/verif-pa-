@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Vérificateur Plateformes Agréées — Talenz</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: #f5f5f5;
+      color: #222;
+      line-height: 1.6;
+    }
+
+    /* ── Header ── */
+    header {
+      background: #000091;
+      color: #fff;
+      padding: 18px 24px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    header .logo {
+      font-size: 22px;
+      font-weight: 700;
+      letter-spacing: -.5px;
+    }
+    header .subtitle {
+      font-size: 13px;
+      opacity: .75;
+      margin-top: 2px;
+    }
+
+    /* ── Layout ── */
+    main {
+      max-width: 860px;
+      margin: 40px auto;
+      padding: 0 20px 60px;
+    }
+
+    h1 {
+      font-size: 26px;
+      font-weight: 700;
+      color: #000091;
+      margin-bottom: 6px;
+    }
+    .tagline {
+      font-size: 15px;
+      color: #555;
+      margin-bottom: 36px;
+    }
+
+    /* ── Steps ── */
+    .steps { display: flex; flex-direction: column; gap: 32px; }
+
+    .step {
+      background: #fff;
+      border: 1px solid #ddd;
+      border-radius: 10px;
+      padding: 28px 30px;
+    }
+    .step-header {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 18px;
+    }
+    .step-num {
+      background: #000091;
+      color: #fff;
+      font-size: 15px;
+      font-weight: 700;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .step-title {
+      font-size: 18px;
+      font-weight: 700;
+      color: #111;
+    }
+
+    /* ── Bookmarklet drop zone ── */
+    .bm-zone {
+      background: linear-gradient(135deg, #f0f0ff 0%, #e8e8f8 100%);
+      border: 2px dashed #000091;
+      border-radius: 10px;
+      padding: 28px 24px;
+      text-align: center;
+      margin: 4px 0 16px;
+    }
+    .bm-arrow {
+      font-size: 28px;
+      margin-bottom: 8px;
+      animation: bounce .8s ease-in-out infinite alternate;
+    }
+    @keyframes bounce { from { transform: translateY(0); } to { transform: translateY(-6px); } }
+
+    .bm-btn {
+      display: inline-block;
+      background: #000091;
+      color: #fff !important;
+      text-decoration: none;
+      padding: 12px 26px;
+      border-radius: 8px;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: grab;
+      user-select: none;
+      box-shadow: 0 4px 12px rgba(0,0,145,.25);
+      transition: box-shadow .2s;
+    }
+    .bm-btn:hover { box-shadow: 0 6px 18px rgba(0,0,145,.35); }
+
+    .bm-hint {
+      font-size: 13px;
+      color: #666;
+      margin-top: 12px;
+    }
+    .bm-hint b { color: #000091; }
+
+    .kbd {
+      display: inline-block;
+      background: #eee;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      padding: 1px 7px;
+      font-size: 12px;
+      font-family: monospace;
+    }
+
+    /* ── Usage list ── */
+    .usage-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .usage-list li {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      font-size: 14px;
+    }
+    .usage-list .icon {
+      font-size: 22px;
+      flex-shrink: 0;
+      width: 32px;
+      text-align: center;
+    }
+    .usage-list a {
+      color: #000091;
+      font-weight: 600;
+    }
+
+    /* ── Perf banner ── */
+    .perf {
+      background: #18753c;
+      color: #fff;
+      border-radius: 10px;
+      padding: 20px 28px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      font-size: 15px;
+      font-weight: 600;
+      margin-top: 32px;
+    }
+    .perf .icon { font-size: 30px; }
+
+    /* ── FAQ ── */
+    .faq { margin-top: 40px; }
+    .faq h2 { font-size: 20px; font-weight: 700; color: #111; margin-bottom: 20px; }
+    details {
+      background: #fff;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      margin-bottom: 10px;
+      overflow: hidden;
+    }
+    summary {
+      padding: 14px 18px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 14px;
+      list-style: none;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+    }
+    summary::after { content: "▼"; font-size: 11px; color: #888; }
+    details[open] summary::after { content: "▲"; }
+    .faq-body { padding: 0 18px 16px; font-size: 13px; color: #444; line-height: 1.7; }
+    .faq-body code { background: #f0f0ff; padding: 1px 6px; border-radius: 4px; font-size: 12px; }
+
+    /* ── Footer ── */
+    footer {
+      text-align: center;
+      font-size: 12px;
+      color: #999;
+      padding: 24px;
+      border-top: 1px solid #e0e0e0;
+      margin-top: 60px;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div>
+    <div class="logo">⭐ Vérificateur PA Chorus Pro</div>
+    <div class="subtitle">Contrôle en masse des Plateformes Agréées via l'annuaire Chorus Pro</div>
+  </div>
+</header>
+
+<main>
+  <h1>Installer le vérificateur PA</h1>
+  <p class="tagline">Installation en 2 minutes — contrôle en masse de vos clients en ~12 min par lot de 240 SIREN</p>
+
+  <div class="steps">
+
+    <!-- ÉTAPE 1 -->
+    <div class="step">
+      <div class="step-header">
+        <div class="step-num">1</div>
+        <div class="step-title">Installer le bouton une seule fois</div>
+      </div>
+
+      <p style="font-size:14px;color:#555;margin-bottom:16px;">
+        Affichez la <strong>barre de favoris</strong> si besoin
+        (<span class="kbd">Ctrl+Maj+B</span> sur Windows, <span class="kbd">Cmd+Maj+B</span> sur Mac),
+        puis <strong>glissez</strong> le bouton ci-dessous vers cette barre :
+      </p>
+
+      <div class="bm-zone">
+        <div class="bm-arrow">⬆️</div>
+
+        <!-- ════════════════════════════════════════════════════════════════
+             BOOKMARKLET — logique principale injectée dans Chorus Pro
+             ════════════════════════════════════════════════════════════════ -->
+        <a class="bm-btn" href="javascript:void function(){
+if(document.getElementById('_pa'))return alert('Déjà ouvert !');
+if(!location.hostname.includes('chorus-pro'))return alert('Ouvrez d\'abord l\'annuaire Chorus Pro et passez le CAPTCHA.');
+var tk;
+try{
+  var sd=JSON.parse(sessionStorage.getItem('0-annuaire'));
+  tk=sd.authzData;
+  if(sd.access_token_expires_at&&Date.now()>sd.access_token_expires_at)
+    return alert('Session expirée. Rechargez (F5), CAPTCHA, puis recliquez.');
+}catch(e){return alert('Passez d\'abord le CAPTCHA.');}
+
+function boot(){
+  var o=document.createElement('div');
+  o.id='_pa';
+  o.style.cssText='position:fixed;top:0;left:0;right:0;bottom:0;z-index:999999;background:#f5f5f5;overflow-y:auto;font-family:system-ui,sans-serif;color:#222;line-height:1.5';
+  o.innerHTML='<div style=%22background:%23000091;color:%23fff;padding:12px 20px;display:flex;align-items:center%22><b style=%22flex:1;font-size:17px%22>⭐ Vérificateur PA Chorus Pro</b><span id=%22_paBdg%22 style=%22background:rgba(255,255,255,.2);padding:3px 12px;border-radius:12px;font-size:12px%22>✅ Connecté</span> <button onclick=%22document.getElementById(%27_pa%27).remove()%22 style=%22margin-left:10px;background:rgba(255,255,255,.25);border:none;color:%23fff;padding:5px 12px;border-radius:4px;cursor:pointer;font-size:13px%22>✕</button></div><div style=%22max-width:900px;margin:0 auto;padding:16px%22><div id=%22_paMsg%22 style=%22display:none;padding:10px 14px;border-radius:6px;margin-bottom:10px;font-size:13px%22></div><div style=%22display:flex;gap:12px;margin-bottom:14px;flex-wrap:wrap%22><div style=%22flex:1;min-width:250px;background:%23fff;border:1px solid %23ddd;border-radius:8px;padding:14px%22><b>1. Fichier Excel</b><br><div id=%22_paDrop%22 style=%22border:2px dashed %23ccc;border-radius:6px;padding:14px;text-align:center;cursor:pointer;margin-top:8px%22 onclick=%22document.getElementById(%27_paFi%27).click()%22>📊 <b style=%22color:%23000091%22>Glissez ou cliquez</b><br><span style=%22font-size:11px;color:%23999%22>.xlsx .xls .csv</span><input type=%22file%22 id=%22_paFi%22 accept=%22.xlsx,.xls,.csv%22 style=%22display:none%22></div><div id=%22_paFI%22 style=%22font-size:12px;color:%23666;margin-top:4px%22></div></div><div style=%22flex:1;min-width:250px;background:%23fff;border:1px solid %23ddd;border-radius:8px;padding:14px%22><b>2. Lancer</b><br><div style=%22margin-top:8px;display:flex;gap:6px;align-items:center;flex-wrap:wrap%22><button id=%22_paGo%22 onclick=%22_paStart()%22 disabled style=%22padding:7px 18px;background:%23000091;color:%23fff;border:none;border-radius:4px;font-weight:600;cursor:pointer;font-size:13px%22>▶ Lancer</button><button id=%22_paPa%22 onclick=%22_paPause()%22 style=%22display:none;padding:7px 12px;background:%23fff;color:%23000091;border:1px solid %23000091;border-radius:4px;cursor:pointer;font-size:13px%22>⏸</button><button id=%22_paRe%22 onclick=%22_paResume()%22 style=%22display:none;padding:7px 12px;background:%23fff;color:%23000091;border:1px solid %23000091;border-radius:4px;cursor:pointer;font-size:13px%22>▶</button><button id=%22_paSt%22 onclick=%22_paStop()%22 style=%22display:none;padding:7px 12px;background:%23e1000f;color:%23fff;border:none;border-radius:4px;cursor:pointer;font-size:13px%22>■</button><label style=%22font-size:12px;color:%23666%22>Délai <input id=%22_paDl%22 type=%22number%22 value=%22300%22 min=%22100%22 max=%222000%22 step=%2250%22 style=%22width:50px;text-align:center;font-size:12px%22> ms</label></div><div id=%22_paEst%22 style=%22font-size:12px;color:%23666;margin-top:4px%22></div></div></div><div id=%22_paPrg%22 style=%22display:none;background:%23fff;border:1px solid %23ddd;border-radius:8px;padding:12px;margin-bottom:10px%22><div style=%22display:flex;justify-content:space-between;font-size:13px;color:%23666%22><span id=%22_paPL%22>Vérification...</span><span id=%22_paPP%22>0%</span></div><div style=%22background:%23eee;border-radius:4px;height:8px;margin:6px 0;overflow:hidden%22><div id=%22_paPB%22 style=%22height:100%;background:linear-gradient(90deg,%23000091,%236a6af4);border-radius:4px;width:0;transition:width .3s%22></div></div><div style=%22display:flex;justify-content:space-between;font-size:12px;color:%23666%22><span id=%22_paPC%22>0/0</span><span id=%22_paPE%22></span></div><div style=%22display:flex;gap:12px;margin-top:6px;font-size:12px;flex-wrap:wrap%22><span>🟢 PA Oui: <b id=%22_xO%22>0</b></span><span>🟠 PA Non: <b id=%22_xN%22>0</b></span><span>⚪ Introuvable: <b id=%22_x4%22>0</b></span><span>🔴 Erreurs: <b id=%22_xE%22>0</b></span></div></div><div id=%22_paRes%22 style=%22display:none;background:%23fff;border:1px solid %23ddd;border-radius:8px;overflow:hidden%22><div style=%22padding:10px 14px;border-bottom:1px solid %23ddd;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px%22><b style=%22font-size:14px%22>Résultats <span id=%22_paRC%22></span></b><div><button id=%22_paEx%22 onclick=%22_paXpR()%22 disabled style=%22padding:6px 14px;background:%2318753c;color:%23fff;border:none;border-radius:4px;cursor:pointer;font-size:12px;font-weight:600;margin-right:4px%22>📥 Résultats</button><button id=%22_paUp%22 onclick=%22_paXpU()%22 disabled style=%22padding:6px 14px;background:%23fff;color:%23000091;border:1px solid %23000091;border-radius:4px;cursor:pointer;font-size:12px;font-weight:600%22>📥 Fichier MAJ</button></div></div><div style=%22max-height:400px;overflow-y:auto%22><table style=%22width:100%;border-collapse:collapse;font-size:12px%22><thead><tr style=%22background:%23f6f6f6;position:sticky;top:0%22><th style=%22padding:6px 8px;text-align:left;font-size:11px;border-bottom:2px solid %23ddd%22>SIREN</th><th style=%22padding:6px 8px;text-align:left;font-size:11px;border-bottom:2px solid %23ddd%22>NOM FICHIER</th><th style=%22padding:6px 8px;text-align:left;font-size:11px;border-bottom:2px solid %23ddd%22>NOM CHORUS</th><th style=%22padding:6px 8px;text-align:left;font-size:11px;border-bottom:2px solid %23ddd%22>PA</th><th style=%22padding:6px 8px;text-align:left;font-size:11px;border-bottom:2px solid %23ddd%22>STATUT</th></tr></thead><tbody id=%22_paTb%22></tbody></table></div></div></div>';
+  document.body.appendChild(o);
+
+  var D={list:[],res:[],oD:null,oH:null,sC:-1,pC:-1,pau:false,idx:0,ab:false,t0:0};
+  var dz=document.getElementById('_paDrop'),fi=document.getElementById('_paFi');
+
+  dz.ondragover=function(e){e.preventDefault();dz.style.borderColor='#000091'};
+  dz.ondragleave=function(){dz.style.borderColor='#ccc'};
+  dz.ondrop=function(e){e.preventDefault();dz.style.borderColor='#ccc';if(e.dataTransfer.files.length)lf(e.dataTransfer.files[0])};
+  fi.onchange=function(){if(fi.files.length)lf(fi.files[0])};
+
+  function lf(f){
+    var r=new FileReader();
+    r.onload=function(e){
+      try{
+        var wb=XLSX.read(new Uint8Array(e.target.result),{type:'array'});
+        var rw=XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]],{header:1,defval:''});
+        if(rw.length<2)throw 'Fichier vide';
+        var h=rw[0].map(function(x){return String(x).trim();});
+        D.oH=h;D.oD=rw;D.sC=-1;
+        for(var i=0;i<h.length;i++){if(/^siren$/i.test(h[i])){D.sC=i;break;}}
+        if(D.sC<0)for(var i=0;i<h.length;i++){if(/siren/i.test(h[i])){D.sC=i;break;}}
+        if(D.sC<0)throw 'Colonne SIREN introuvable';
+        D.pC=-1;
+        for(var i=0;i<h.length;i++){if(/plateforme|^pa$/i.test(h[i])){D.pC=i;break;}}
+        var nC=-1;
+        for(var i=0;i<h.length;i++){if(/^nom$/i.test(h[i])){nC=i;break;}}
+        var m={};D.list=[];
+        for(var i=1;i<rw.length;i++){
+          var s=String(rw[i][D.sC]||'').replace(/\D/g,'').slice(0,9);
+          if(s.length===9&&!m[s]){m[s]=1;D.list.push({s:s,n:nC>=0?String(rw[i][nC]||'').trim():''});}
+        }
+        D.res=[];D.idx=0;
+        if(!D.list.length)throw 'Aucun SIREN valide (9 chiffres)';
+        dz.innerHTML='✅ <b>'+f.name+'</b><br><span style=%22font-size:11px;color:%23666%22>'+D.list.length+' SIREN uniques</span>';
+        dz.style.borderColor='#18753c';dz.style.borderStyle='solid';dz.style.background='#f0fff4';
+        document.getElementById('_paGo').disabled=false;
+        var ms=parseInt(document.getElementById('_paDl').value)||300;
+        var sc=Math.round(D.list.length*ms/1000);
+        document.getElementById('_paEst').textContent=D.list.length+' SIREN — ~'+Math.floor(sc/60)+'min '+sc%60+'s';
+        msg('ok','Fichier chargé ! Cliquez Lancer.');
+      }catch(er){msg('err',''+er);}
+    };
+    r.readAsArrayBuffer(f);
+  }
+
+  window._paStart=function(){
+    try{
+      var sd2=JSON.parse(sessionStorage.getItem('0-annuaire'));
+      tk=sd2.authzData;
+      if(sd2.access_token_expires_at&&Date.now()>sd2.access_token_expires_at){msg('err','Session expirée ! Rechargez (F5).');return;}
+    }catch(e){msg('err','Session perdue.');return;}
+    if(!D.list.length){msg('err','Chargez un fichier.');return;}
+    D.pau=false;D.ab=false;D.idx=0;D.res=[];D.t0=Date.now();
+    document.getElementById('_paGo').style.display='none';
+    document.getElementById('_paPa').style.display='';
+    document.getElementById('_paSt').style.display='';
+    document.getElementById('_paPrg').style.display='block';
+    document.getElementById('_paRes').style.display='block';
+    document.getElementById('_paTb').innerHTML='';
+    msg('','');
+    doLoop();
+  };
+
+  function doLoop(){
+    var ms=parseInt(document.getElementById('_paDl').value)||300;
+    var tot=D.list.length;
+    function nx(){
+      if(D.idx>=tot||D.ab){if(!D.ab)done();return;}
+      if(D.pau)return;
+      var sir=D.list[D.idx].s,nom=D.list[D.idx].n;
+      fetch('/annuaire/annuaire-api/unite-legale/'+sir,{headers:{'Authorization':'Bearer '+tk}})
+        .then(function(rp){
+          if(rp.status===401){msg('err','Session expirée ! Fermez, rechargez, CAPTCHA, recliquez.');return null;}
+          if(rp.status===404)return{s:sir,nF:nom,nC:'',pa:'-',st:'Introuvable'};
+          if(!rp.ok)return{s:sir,nF:nom,nC:'',pa:'-',st:'Err'+rp.status};
+          return rp.json().then(function(a){
+            if(!Array.isArray(a))a=[a];
+            var u,l;
+            for(var i=0;i<a.length;i++){
+              if(a[i].type==='UNITE_LEGALE')u=a[i];
+              if(a[i].type==='LIGNE_ANNUAIRE_SIREN')l=a[i];
+            }
+            return{s:sir,nF:nom,nC:(u&&u.companyName)||(l&&l.companyName)||'',pa:(u&&u.approvedAssociatedPlatform)?'Oui':'Non',st:'OK'};
+          });
+        })
+        .catch(function(){return{s:sir,nF:nom,nC:'',pa:'-',st:'Erreur'};})
+        .then(function(r){if(!r)return;D.res.push(r);D.idx++;uiUp();setTimeout(nx,ms);});
+    }
+    nx();
+  }
+
+  window._paPause=function(){
+    D.pau=true;
+    document.getElementById('_paPa').style.display='none';
+    document.getElementById('_paRe').style.display='';
+    document.getElementById('_paPL').textContent='⏸ Pause';
+  };
+  window._paResume=function(){
+    D.pau=false;
+    document.getElementById('_paRe').style.display='none';
+    document.getElementById('_paPa').style.display='';
+    document.getElementById('_paPL').textContent='Vérification...';
+    doLoop();
+  };
+  window._paStop=function(){
+    D.ab=true;
+    document.getElementById('_paPa').style.display='none';
+    document.getElementById('_paRe').style.display='none';
+    document.getElementById('_paSt').style.display='none';
+    var b=document.getElementById('_paGo');
+    b.style.display='';b.disabled=false;b.textContent='▶ Relancer';
+    document.getElementById('_paPL').textContent='⏹ Arrêté';
+    enX();
+  };
+
+  function done(){
+    document.getElementById('_paPa').style.display='none';
+    document.getElementById('_paSt').style.display='none';
+    var b=document.getElementById('_paGo');
+    b.style.display='';b.disabled=false;b.textContent='▶ Relancer';
+    document.getElementById('_paPL').textContent='✅ Terminé !';
+    document.getElementById('_paPB').style.background='#18753c';
+    enX();
+    var s=Math.round((Date.now()-D.t0)/1000);
+    document.getElementById('_paPE').textContent='Durée: '+Math.floor(s/60)+'min '+s%60+'s';
+    msg('ok','Terminé ! '+D.res.length+' SIREN en '+Math.floor(s/60)+'min '+s%60+'s');
+  }
+
+  function enX(){
+    document.getElementById('_paEx').disabled=!D.res.length;
+    document.getElementById('_paUp').disabled=!D.res.length;
+  }
+
+  function uiUp(){
+    var c=D.idx,t=D.list.length,p=Math.round(c/t*100);
+    document.getElementById('_paPB').style.width=p+'%';
+    document.getElementById('_paPP').textContent=p+'%';
+    document.getElementById('_paPC').textContent=c+'/'+t;
+    document.getElementById('_paRC').textContent='('+c+')';
+    var o=0,n=0,f=0,er=0;
+    for(var i=0;i<D.res.length;i++){
+      if(D.res[i].pa==='Oui')o++;
+      else if(D.res[i].pa==='Non')n++;
+      if(D.res[i].st==='Introuvable')f++;
+      if(D.res[i].st.indexOf('Err')===0)er++;
+    }
+    document.getElementById('_xO').textContent=o;
+    document.getElementById('_xN').textContent=n;
+    document.getElementById('_x4').textContent=f;
+    document.getElementById('_xE').textContent=er;
+    var el=(Date.now()-D.t0)/1000,rm=Math.round((t-c)/(c/el));
+    document.getElementById('_paPE').textContent=rm>60?'~'+Math.floor(rm/60)+'m'+rm%60+'s':'~'+rm+'s';
+    var r=D.res[D.res.length-1],tb=document.getElementById('_paTb'),tr=document.createElement('tr');
+    var pc=r.pa==='Oui'?'background:#b8fec9;color:#18753c':r.pa==='Non'?'background:#fff0e4;color:#d64d00':'background:#eee;color:#999';
+    var sc=r.st==='OK'?'color:#18753c':r.st==='Introuvable'?'color:#999':'color:#e1000f';
+    tr.innerHTML='<td style=%22padding:4px 8px;border-bottom:1px solid %23eee;font-family:monospace%22>'+r.s+'</td><td style=%22padding:4px 8px;border-bottom:1px solid %23eee%22>'+esc(r.nF)+'</td><td style=%22padding:4px 8px;border-bottom:1px solid %23eee%22>'+esc(r.nC)+'</td><td style=%22padding:4px 8px;border-bottom:1px solid %23eee%22><span style=%22padding:1px 8px;border-radius:8px;font-size:11px;font-weight:600;'+pc+'%22>'+r.pa+'</span></td><td style=%22padding:4px 8px;border-bottom:1px solid %23eee;font-weight:600;'+sc+'%22>'+r.st+'</td>';
+    tb.appendChild(tr);
+  }
+
+  window._paXpR=function(){
+    var d=[['SIREN','Nom (fichier)','Nom (Chorus Pro)','Plateforme Agréée','Statut','Date vérification']];
+    var now=new Date().toLocaleString('fr-FR');
+    for(var i=0;i<D.res.length;i++){var r=D.res[i];d.push([r.s,r.nF,r.nC,r.pa,r.st,now]);}
+    var ws=XLSX.utils.aoa_to_sheet(d);
+    var wb=XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb,ws,'PA');
+    XLSX.writeFile(wb,'resultats-pa-'+new Date().toISOString().slice(0,10)+'.xlsx');
+  };
+
+  window._paXpU=function(){
+    if(!D.oD)return;
+    var mp={};
+    for(var i=0;i<D.res.length;i++){var r=D.res[i];if(r.pa==='Oui'||r.pa==='Non')mp[r.s]=r.pa;}
+    var o=[];
+    for(var i=0;i<D.oD.length;i++)o.push(D.oD[i].slice());
+    var pi=D.pC;
+    if(pi<0){pi=o[0].length;o[0].push('Plateforme activée');}
+    for(var i=1;i<o.length;i++){
+      var s=String(o[i][D.sC]||'').replace(/\D/g,'').slice(0,9);
+      if(mp[s]!==undefined){while(o[i].length<=pi)o[i].push('');o[i][pi]=mp[s];}
+    }
+    var ws=XLSX.utils.aoa_to_sheet(o);
+    var wb=XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb,ws,'Clients');
+    XLSX.writeFile(wb,'clients-pa-maj-'+new Date().toISOString().slice(0,10)+'.xlsx');
+  };
+
+  function esc(s){return s?s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'):''}
+  function msg(t,m){
+    var e=document.getElementById('_paMsg');
+    if(!m){e.style.display='none';return;}
+    e.style.display='block';
+    e.style.background=t==='err'?'#fff0f0':'#f0f0ff';
+    e.style.border='1px solid '+(t==='err'?'#fcc':'#c5c5f7');
+    e.style.color=t==='err'?'#c00':'#000091';
+    e.textContent=m;
+  }
+  msg('ok','Outil prêt ! Glissez votre fichier Excel.');
+}
+
+if(window.XLSX)boot();
+else{var s=document.createElement('script');s.src='https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js';s.onload=boot;document.head.appendChild(s);}
+}()
+)">⭐ Vérif PA</a>
+
+        <p class="bm-hint">
+          ☝️ <b>Glissez</b> ce bouton vers la barre de favoris (ne cliquez pas ici !)<br>
+          <span style="margin-top:6px;display:inline-block">💡 Barre invisible ? <span class="kbd">Ctrl+Maj+B</span> (Windows) · <span class="kbd">Cmd+Maj+B</span> (Mac)</span>
+        </p>
+      </div>
+    </div>
+
+    <!-- ÉTAPE 2 -->
+    <div class="step">
+      <div class="step-header">
+        <div class="step-num">2</div>
+        <div class="step-title">Utilisation mensuelle (5 clics)</div>
+      </div>
+
+      <ul class="usage-list">
+        <li>
+          <span class="icon">🌐</span>
+          <span>Ouvrez <a href="https://facturation.chorus-pro.gouv.fr/annuaire/" target="_blank" rel="noopener">l'annuaire Chorus Pro</a> et <strong>passez le CAPTCHA</strong></span>
+        </li>
+        <li>
+          <span class="icon">⭐</span>
+          <span>Cliquez sur <strong>⭐ Vérif PA</strong> dans votre barre de favoris</span>
+        </li>
+        <li>
+          <span class="icon">📊</span>
+          <span><strong>Glissez votre fichier Excel</strong> dans l'outil qui apparaît<br>
+          <small style="color:#888;">Colonne <code style="background:#f0f0ff;padding:1px 5px;border-radius:3px;font-size:11px">SIREN</code> obligatoire · formats acceptés : .xlsx .xls .csv</small></span>
+        </li>
+        <li>
+          <span class="icon">▶️</span>
+          <span>Cliquez <strong>Lancer</strong> et attendez ~12 min pour 240 SIREN</span>
+        </li>
+        <li>
+          <span class="icon">📥</span>
+          <span>Exportez via <strong>📥 Résultats</strong> (nouveau fichier) ou <strong>📥 Fichier MAJ</strong> (colonne ajoutée à votre fichier original)</span>
+        </li>
+      </ul>
+    </div>
+
+  </div><!-- /steps -->
+
+  <!-- Bandeau perf -->
+  <div class="perf">
+    <span class="icon">⏱️</span>
+    <span>5 clics, ~12 minutes — au lieu de 20+ heures de vérification manuelle client par client</span>
+  </div>
+
+  <!-- FAQ -->
+  <div class="faq">
+    <h2>❓ Questions fréquentes</h2>
+
+    <details>
+      <summary>Rien ne se passe quand je clique sur le favori ?</summary>
+      <div class="faq-body">
+        Vérifiez que vous êtes bien sur <code>facturation.chorus-pro.gouv.fr/annuaire</code>
+        après avoir passé le CAPTCHA. Le bookmarklet ne fonctionne que depuis cette page précise.
+      </div>
+    </details>
+
+    <details>
+      <summary>Message "session expirée" ?</summary>
+      <div class="faq-body">
+        Rechargez la page <span class="kbd">F5</span>, repassez le CAPTCHA, puis recliquez sur le favori ⭐.
+        La session Chorus Pro expire au bout d'environ 30 minutes d'inactivité.
+      </div>
+    </details>
+
+    <details>
+      <summary>Le glisser-déposer du bouton ne fonctionne pas ?</summary>
+      <div class="faq-body">
+        Clic droit sur la barre de favoris → <em>Ajouter une page</em> → Nom : <strong>Vérif PA</strong>
+        → URL : copiez l'attribut <code>href</code> du bouton doré (clic droit → Inspecter).
+      </div>
+    </details>
+
+    <details>
+      <summary>Mon fichier n'est pas reconnu ?</summary>
+      <div class="faq-body">
+        Le fichier doit contenir une colonne dont l'en-tête contient le mot <code>SIREN</code>
+        (insensible à la casse) avec des numéros à 9 chiffres. Formats supportés : <code>.xlsx</code> <code>.xls</code> <code>.csv</code>.
+      </div>
+    </details>
+
+    <details>
+      <summary>Quelle API est utilisée ?</summary>
+      <div class="faq-body">
+        L'outil appelle l'API interne de l'annuaire Chorus Pro
+        (<code>/annuaire/annuaire-api/unite-legale/{siren}</code>) avec le jeton Bearer
+        récupéré dans votre session active. Aucune donnée ne transite par un serveur tiers.
+        Tout est traité localement dans votre navigateur.
+      </div>
+    </details>
+
+    <details>
+      <summary>Le délai entre requêtes est-il important ?</summary>
+      <div class="faq-body">
+        Oui. Le délai par défaut est de 300 ms pour éviter un bannissement temporaire par l'API Chorus Pro.
+        Ne descendez pas en dessous de 200 ms. Vous pouvez l'augmenter si vous observez des erreurs
+        (ex. 429 Too Many Requests).
+      </div>
+    </details>
+  </div>
+
+</main>
+
+<footer>
+  Outil de vérification PA · Données annuaire Chorus Pro (DGFiP) · Aucune donnée transmise à des tiers
+</footer>
+
+</body>
+</html>
